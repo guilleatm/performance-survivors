@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://b58jnu0nof62n"]
+
+[ext_resource type="Script" path="res://Scripts/EnemyManager.cs" id="1_uw5dx"]
+[ext_resource type="Texture2D" uid="uid://f0pkgsox74lg" path="res://Assets/frog_square_32x32.png" id="2_7qvho"]
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="4_7rp03"]
+[ext_resource type="Script" path="res://Scripts/BulletManager.cs" id="5_5ejsu"]
+[ext_resource type="Texture2D" uid="uid://3mnl2j66tesu" path="res://Assets/frog_circle_16x16.png" id="6_6pwfg"]
+[ext_resource type="Script" path="res://Scripts/UI.cs" id="7_vnoqf"]
+
+[sub_resource type="Curve" id="Curve_3t5wj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.99999, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[node name="World" type="Node2D"]
+
+[node name="EnemyManager" type="Node2D" parent="."]
+script = ExtResource("1_uw5dx")
+_enemySpeed = 60.0
+_spawnCurve = SubResource("Curve_3t5wj")
+_duration_seconds = 60
+_baseEnemies = 100
+_texture = ExtResource("2_7qvho")
+
+[node name="Player" type="Sprite2D" parent="." groups=["Player"]]
+position = Vector2(591, 337)
+texture = ExtResource("6_6pwfg")
+script = ExtResource("4_7rp03")
+speed = 100.0
+
+[node name="BulletManager" type="Node2D" parent="Player"]
+script = ExtResource("5_5ejsu")
+bulletSpeed = 200.0
+bulletSpawnRate = 350.0
+_texture = ExtResource("6_6pwfg")
+
+[node name="Control" type="VBoxContainer" parent="." node_paths=PackedStringArray("fps", "instanceCount", "spawners")]
+z_index = 1
+offset_right = 40.0
+offset_bottom = 56.0
+script = ExtResource("7_vnoqf")
+fps = NodePath("FPS")
+instanceCount = NodePath("Instance Counter")
+spawners = [NodePath("../EnemyManager"), NodePath("../Player/BulletManager")]
+
+[node name="FPS" type="Label" parent="Control"]
+layout_mode = 2
+text = "60"
+
+[node name="Instance Counter" type="Label" parent="Control"]
+layout_mode = 2
+text = "100"
